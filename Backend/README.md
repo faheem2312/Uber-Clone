@@ -80,3 +80,103 @@ This endpoint allows an existing user to log in by verifying their email and pas
   }
 }
 ```
+
+# User Login Endpoint Documentation
+
+## Endpoint
+**POST** `/users/login`
+
+## Description
+This endpoint allows an existing user to log in by verifying their email and password. The input data is validated, and if incorrect credentials are provided, it returns a 401 error with an appropriate message. If the validation fails, a 400 error is returned.
+
+## Request Body Format
+- **email:** String (required, must be a valid email format)
+- **password:** String (required, minimum 6 characters)
+
+**Example Request Body:**
+```json
+{
+  "email": "john.doe@example.com",
+  "password": "secret123"
+}
+```
+## Example Response
+
+### On Successful Login (Status Code 200)
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "user": {
+    "_id": "645141eefd293c2c60cb6791",
+    "fullname": {
+      "firstname": "John",
+      "lastname": "Doe"
+    },
+    "email": "john.doe@example.com",
+    "password": "$2b$10$abcdefgHijklmnopqrs"
+  }
+}
+```
+
+### On Validation Failure (Status Code 400)
+```json
+{
+  "errors": [
+    {
+      "msg": "Please enter a valid email address.",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+### On Authentication Failure (Status Code 401)
+```json
+{
+  "message": "Invalid credentials"
+}
+```
+
+---
+
+# User Profile Endpoint Documentation
+
+## Endpoint
+**GET** `/users/profile`
+
+## Description
+This protected endpoint retrieves the authenticated user's profile data. The user must be authenticated via a valid token supplied in cookies or the `Authorization` header.
+
+## Example Response
+
+### On Success (Status Code 200)
+```json
+{
+  "_id": "645141eefd293c2c60cb6791",
+  "fullname": {
+    "firstname": "John",
+    "lastname": "Doe"
+  },
+  "email": "john.doe@example.com"
+}
+```
+
+---
+
+# User Logout Endpoint Documentation
+
+## Endpoint
+**GET** `/users/logout`
+
+## Description
+This protected endpoint logs out the authenticated user by clearing the token cookie and blacklisting the token. After logout, the API returns a confirmation message.
+
+## Example Response
+
+### On Success (Status Code 200)
+```json
+{
+  "message": "Logged out"
+}
+```
