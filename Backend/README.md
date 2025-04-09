@@ -180,3 +180,80 @@ This protected endpoint logs out the authenticated user by clearing the token co
   "message": "Logged out"
 }
 ```
+
+# Captain Endpoints Documentation
+
+This document outlines the API endpoints for managing captain-related operations in the Uber Clone application.
+
+---
+
+## Captain Registration Endpoint
+
+### Endpoint
+**POST** `/captain/register`
+
+### Description
+This endpoint registers a new captain by accepting the captain’s full name, email, password, and vehicle details. The request data is validated and, if valid and the email is not already registered, a new captain account is created. Upon successful registration, an authentication token is issued.
+
+### Request Body Format
+- **fullname:** Object containing:
+  - **firstname:** String (required, minimum 3 characters)
+  - **lastname:** String (optional, minimum 3 characters if provided)
+- **email:** String (required, must be a valid email format)
+- **password:** String (required, minimum 6 characters)
+- **vehicle:** Object containing:
+  - **color:** String (required, minimum 3 characters)
+  - **plate:** String (required, minimum 3 characters)
+  - **capacity:** Number (required, minimum value of 1)
+  - **vehicleType:** String (required, must be one of `car`, `motorcycle`, or `auto`)
+
+**Example Request Body:**
+```json
+{
+  "fullname": {
+    "firstname": "Alice",
+    "lastname": "Smith"
+  },
+  "email": "alice.smith@example.com",
+  "password": "securePass123",
+  "vehicle": {
+    "color": "Black",
+    "plate": "XYZ-123",
+    "capacity": 4,
+    "vehicleType": "car"
+  }
+}
+```
+
+### Example Response
+
+#### On Successful Registration (Status Code 201)
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "6400a1c2ef1234567890abcd",
+    "fullname": {
+      "firstname": "Alice",
+      "lastname": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "color": "Black",
+      "plate": "XYZ-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "password": "$2b$10$abcdefgHijklmnopqrs"
+  }
+}
+```
+
+#### On Duplicate Email (Status Code 400)
+```json
+{
+  "message": "Captain already exists"
+}
+```
+
+---
