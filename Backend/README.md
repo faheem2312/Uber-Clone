@@ -257,3 +257,122 @@ This endpoint registers a new captain by accepting the captain’s full name, em
 ```
 
 ---
+
+## Captain Login Endpoint
+
+### Endpoint
+**POST** `/captain/login`
+
+### Description
+This endpoint allows an existing captain to log in by verifying their email and password. The request data is validated, and if the credentials are correct, a new authentication token is issued.
+
+### Request Body Format
+- **email:** String (required, must be a valid email format)
+- **password:** String (required, minimum 6 characters)
+
+**Example Request Body:**
+```json
+{
+  "email": "alice.smith@example.com",
+  "password": "securePass123"
+}
+```
+
+### Example Response
+
+#### On Successful Login (Status Code 200)
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "captain": {
+    "_id": "6400a1c2ef1234567890abcd",
+    "fullname": {
+      "firstname": "Alice",
+      "lastname": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "color": "Black",
+      "plate": "XYZ-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    },
+    "password": "$2b$10$abcdefgHijklmnopqrs"
+  }
+}
+```
+
+#### On Validation Failure (Status Code 400)
+```json
+{
+  "errors": [
+    {
+      "msg": "Please enter a valid email address.",
+      "param": "email",
+      "location": "body"
+    }
+  ]
+}
+```
+
+#### On Authentication Failure (Status Code 400)
+```json
+{
+  "message": "Invalid email or password"
+}
+```
+
+---
+
+## Captain Profile Endpoint
+
+### Endpoint
+**GET** `/captain/profile`
+
+### Description
+This protected endpoint retrieves the authenticated captain’s profile data. The captain must be authenticated via a valid token supplied in cookies or the `Authorization` header.
+
+### Example Response
+
+#### On Success (Status Code 200)
+```json
+{
+  "captain": {
+    "_id": "6400a1c2ef1234567890abcd",
+    "fullname": {
+      "firstname": "Alice",
+      "lastname": "Smith"
+    },
+    "email": "alice.smith@example.com",
+    "vehicle": {
+      "color": "Black",
+      "plate": "XYZ-123",
+      "capacity": 4,
+      "vehicleType": "car"
+    }
+  }
+}
+```
+
+---
+
+## Captain Logout Endpoint
+
+### Endpoint
+**GET** `/captain/logout`
+
+### Description
+This protected endpoint logs out the authenticated captain by clearing the token cookie and blacklisting the token. After logout, a confirmation message is returned.
+
+### Example Response
+
+#### On Success (Status Code 200)
+```json
+{
+  "message": "Logged out successfully"
+}
+```
+
+---
+
+Ensure that your routes, controllers, and models are correctly set up to match this documentation. Adjust the documentation as needed based on any future changes to your API.
